@@ -1,0 +1,4 @@
+# ignored directories
+lib
+# ignored extensions
+*.o
