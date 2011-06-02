@@ -1,0 +1,14 @@
+Lightweight Libraries in C++
+
+This is a lightweight C++ libraries, mainly based on header files only,
+for the personal use.
+
+Version 0.1
+currently this library contains only logstream class, which supports
+for a output stream toward both cout and ofstream simultanously. 
+it also supports switching function to turn on and off either of them.
+
+
+
+This library is under LGPL license. Please read LICENSE file for detail
+information.
