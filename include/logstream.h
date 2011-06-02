@@ -1,6 +1,11 @@
 //
 // logstream.h
 //
+// output logstream to both cout and ofsream
+//
+// Jinserk Baik <jinserk.baik@gmail.com>
+// copyright (c) 2011, all rights reserved.
+//
 
 #ifndef __LOGSTREAM_H__
 #define __LOGSTREAM_H__
@@ -130,15 +135,15 @@ namespace framework {
         typedef std::basic_ostream<charT, traits> base_stream_type;
 
         private:
-            std::filebuf  fbuf_;
-            logstreambuf  logbuf_;
+            std::filebuf                fbuf_;
+            basic_logstreambuf<charT>   logbuf_;
 
         public:
             basic_logstream()
-                : logbuf_(&fbuf_, std::cout.rdbuf()), base_stream_type(&logbuf_) {}
+                : base_stream_type(&logbuf_), logbuf_(&fbuf_, std::cout.rdbuf()) {}
 
             basic_logstream(const char* file)
-                : logbuf_(&fbuf_, std::cout.rdbuf()), base_stream_type(&logbuf_)
+                : base_stream_type(&logbuf_), logbuf_(&fbuf_, std::cout.rdbuf())
             {
                 this->open(file);
             }

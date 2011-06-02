@@ -1,4 +1,5 @@
 # ignored directories
 lib
+gcc
 # ignored extensions
 *.o
