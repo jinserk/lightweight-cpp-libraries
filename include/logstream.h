@@ -132,11 +132,12 @@ namespace framework {
     template <class charT, class traits = std::char_traits<charT> >
     class basic_logstream : public std::basic_ostream<charT, traits>
     {
-        typedef std::basic_ostream<charT, traits> base_stream_type;
+        typedef std::basic_ostream<charT, traits>   base_stream_type;
+        typedef basic_logstreambuf<charT, traits>   logstreambuf_type;
 
         private:
-            std::filebuf                fbuf_;
-            basic_logstreambuf<charT>   logbuf_;
+            std::filebuf        fbuf_;
+            logstreambuf_type   logbuf_;
 
         public:
             basic_logstream()
