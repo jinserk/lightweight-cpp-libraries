@@ -13,6 +13,7 @@
 #include <iostream>
 #include <fstream>
 #include <streambuf>
+#include <cstdarg>
 
 namespace framework {
 
@@ -169,6 +170,20 @@ namespace framework {
             void fout_off(void) { logbuf_.sbuf1_off(); }
             void cout_on(void)  { logbuf_.sbuf2_on();  }
             void cout_off(void) { logbuf_.sbuf2_off(); }
+
+            int printf(const char *fmt, ...)
+            {
+                va_list argptr;
+                va_start(argptr, fmt);
+
+                int ret;
+                char sr[1024];
+                ret = vsnprintf(sr, 1024, fmt, argptr);
+                *this << sr;
+
+                va_end(argptr);
+                return ret;
+            }
 
     }; // class basic_logstream
 

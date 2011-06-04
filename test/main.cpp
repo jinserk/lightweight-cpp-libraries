@@ -26,6 +26,8 @@ int main(int argc, char* argv[], char* envp[])
     log.fout_on();
     log << "both on\n";
 
+    log.printf("test %d %s %f\n", 10, "string", 1.);
+
     return 0;
 }
 
