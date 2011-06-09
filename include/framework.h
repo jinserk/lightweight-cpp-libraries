@@ -11,5 +11,6 @@
 #define __FRAMEWORK_H__
 
 #include "logstream.h"
+#include "array.h"
 
 #endif // __FRAMEWORK_H__

@@ -2,13 +2,28 @@
 // main.cpp
 //
 
+#include <iostream>
+#include <iomanip>
+
 #include "framework.h"
 
-namespace fw = ::framework;
+using namespace std;
+using namespace framework;
+
+void test_logstream(void);
+void test_array(void);
 
 int main(int argc, char* argv[], char* envp[])
 {
-    fw::logstream log("log.txt");
+    //test_logstream();
+    test_array();
+
+    return 0;
+}
+
+void test_logstream(void)
+{
+    logstream log("log.txt");
 
     log << "both!\n";
 
@@ -27,7 +42,44 @@ int main(int argc, char* argv[], char* envp[])
     log << "both on\n";
 
     log.printf("test %d %s %f\n", 10, "string", 1.);
+    log << endl;
+}
 
-    return 0;
+void test_array(void)
+{
+    array<int, 2> A(4, 3);
+    array<int, 2> B;
+
+    A = 1, 2, 3,
+        4, 5, 6,
+        7, 8, 9,
+        10, 11, 12;
+
+    try {
+        B[0][0] = -1;
+    } catch (array_exception e) {
+        cout << e.what() << endl;
+    }
+
+    B = A;
+
+    A.resize(2, 4);
+    A = 0, 1, 2, 3, 4, 5, 6, 7;
+
+    cout << setw(2) << setfill('0') << 9 << endl;
+    cout << setw(2) << setfill('0') << B << endl;
+    cout << A[1] << endl;
+    cout << B.at(2) << endl;
+
+    try {
+        A[4][2] = 99;
+    } catch (array_exception e) {
+        cout << e.what() << endl;
+    }
+
+    array<int, 1> C;
+    C.set_size(3);
+    C = 1, 2, 3, 4;
+    cout << C << endl;
 }
 
