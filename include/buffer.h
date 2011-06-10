@@ -33,7 +33,7 @@ namespace framework
             buffer(buffer<T>& other)
             {
                 element_ = NULL;
-                sz_ = 0;
+                sz_      = 0;
                 operator= (other);
             }
 
@@ -92,7 +92,7 @@ namespace framework
 
             inline buffer<T>& operator= (buffer<T>& rhs)
             {
-                array<T, 1>::operator= (rhs);
+                array<T, 1>::operator= ((array<T, 1>&)rhs);
                 occupied_ = rhs.occupied_;
                 hpos_     = rhs.hpos_;
                 return *this;

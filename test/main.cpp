@@ -103,6 +103,9 @@ void test_buffer(void)
         A.push(i);
         cout << setw(2) << setfill('0') << A << endl;
     }
+
+    buffer<int> B = A;
+
     for (int i = 0; i < 11; ++i) {
         try {
             int x = A.pop();
@@ -111,4 +114,6 @@ void test_buffer(void)
             SHOW(e);
         }
     }
+
+    cout << B << endl;
 }
