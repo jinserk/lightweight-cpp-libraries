@@ -58,7 +58,7 @@ void test_array(void)
     try {
         B[0][0] = -1;
     } catch (array_exception e) {
-        cout << e.what() << endl;
+        SHOW(e);
     }
 
     B = A;
@@ -74,7 +74,7 @@ void test_array(void)
     try {
         A[4][2] = 99;
     } catch (array_exception e) {
-        cout << e.what() << endl;
+        SHOW(e);
     }
 
     array<int, 1> C;

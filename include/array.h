@@ -15,6 +15,8 @@
 
 namespace framework
 {
+    #define SHOW(e)     e.show(__FILE__, __LINE__)
+
     struct array_exception
     {
         enum category {
@@ -27,6 +29,12 @@ namespace framework
         } code_;
 
         array_exception(category code) : code_(code) {}
+
+        void show(const char* f = __FILE__, const int l = __LINE__)
+        {
+            std::cerr << "Error in " << f << " at line " << l << " : "
+                << what() << std::endl;
+        }
 
         std::string what(void) const
         {
@@ -83,7 +91,6 @@ namespace framework
             {
                 if (dim != 2)
                     throw(array_exception(array_exception::DIM_ERROR));
-
                 container_ = new array<T, dim-1> [s1];
                 sz_        = s1;
                 tpos_      = 0;
@@ -95,7 +102,6 @@ namespace framework
             {
                 if (dim != 3)
                     throw(array_exception(array_exception::DIM_ERROR));
-
                 container_ = new array<T, dim-1> [s1];
                 sz_        = s1;
                 tpos_      = 0;
@@ -108,6 +114,8 @@ namespace framework
                 if (!container_) return;
                 delete [] container_;
                 container_ = NULL;
+                sz_        = 0;
+                tpos_      = 0;
             }
 
             inline void resize(size_t s1, size_t s2)
@@ -124,7 +132,7 @@ namespace framework
 
             inline array<T, dim-1>& operator[] (size_t idx)
             {
-                if (idx > sz_)
+                if (idx >= sz_)
                     throw(array_exception(array_exception::OUT_OF_RANGE));
                 if (!container_)
                     throw(array_exception(array_exception::NOT_ALLOCATED));
@@ -142,9 +150,11 @@ namespace framework
                     throw(array_exception(array_exception::OUT_OF_RANGE));
                 if (!container_)
                     throw(array_exception(array_exception::NOT_ALLOCATED));
-                if (container_[tpos_].push(e))
-                    if (++tpos_ == sz_) return true;
-                return false;
+                if (container_[tpos_].push(e)) ++tpos_;
+                if (tpos_ == sz_)
+                    return true;
+                else
+                    return false;
             }
 
             inline size_t size(void) const
@@ -154,8 +164,9 @@ namespace framework
 
             inline array<T, dim>& operator= (array<T, dim>& rhs)
             {
-                if (sz_ != rhs.sz_) {
+                if (sz_ != rhs.sz_)
                     clear();
+                if (!container_) {
                     sz_ = rhs.sz_;
                     container_ = new array<T, dim-1> [sz_];
                 }
@@ -169,6 +180,14 @@ namespace framework
             {
                 reset_pos();
                 push(rhs);
+                return *this;
+            }
+
+            template <typename T2>
+            inline array<T, dim>& operator= (const T2 rhs)
+            {
+                reset_pos();
+                push((T)rhs);
                 return *this;
             }
 
@@ -248,9 +267,11 @@ namespace framework
                     throw(array_exception(array_exception::OUT_OF_RANGE));
                 if (!element_)
                     throw(array_exception(array_exception::NOT_ALLOCATED));
-                element_[tpos_] = e;
-                if (++tpos_ == sz_) return true;
-                return false;
+                element_[tpos_++] = e;
+                if (tpos_ == sz_)
+                    return true;
+                else
+                    return false;
             }
 
             inline size_t size(void) const
@@ -260,8 +281,9 @@ namespace framework
 
             inline array<T, 1>& operator= (array<T, 1>& rhs)
             {
-                if (sz_ != rhs.sz_) {
+                if (sz_ != rhs.sz_)
                     clear();
+                if (!element_) {
                     sz_ = rhs.sz_;
                     element_ = new T [sz_];
                 } 
@@ -275,6 +297,14 @@ namespace framework
             {
                 reset_pos();
                 push(rhs);
+                return *this;
+            }
+
+            template <typename T2>
+            inline array<T, 1>& operator= (const T2 rhs)
+            {
+                reset_pos();
+                push((T)rhs);
                 return *this;
             }
 
@@ -310,14 +340,17 @@ namespace framework
     inline std::ostream& operator<< (std::ostream& os, array<T, dim>& ar)
     {
         std::stringstream oss;
-        oss.copyfmt(os);
         size_t sz = ar.size();
         if (dim > 1)
-            for (size_t i = 0; i < sz; i++)
+            for (size_t i = 0; i < sz; i++) {
+                oss.copyfmt(os);
                 oss << ar[i] << '\n';
+            }
         else
-            for (size_t i = 0; i < sz; i++)
+            for (size_t i = 0; i < sz; i++) {
+                oss.copyfmt(os);
                 oss << ar[i] << ' ';
+            }
         return os << oss.str();
     }
 
