@@ -72,6 +72,11 @@ namespace framework
                     throw(array_exception(array_exception::DIM_ERROR));
             }
 
+            array(array<T, dim>& other) : container_(NULL), sz_(0)
+            {
+                operator= (other);
+            }
+
             array(size_t s1, size_t s2)
             {
                 set_size(s1, s2);
@@ -82,7 +87,7 @@ namespace framework
                 set_size(s1, s2, s3);
             }
 
-            ~array()
+            virtual ~array()
             {
                 clear();
             }
@@ -109,7 +114,7 @@ namespace framework
                     container_[i].set_size(s2, s3);
             }
 
-            inline void clear()
+            inline virtual void clear()
             {
                 if (!container_) return;
                 delete [] container_;
@@ -130,7 +135,7 @@ namespace framework
                 set_size(s1, s2, s3);
             }
 
-            inline array<T, dim-1>& operator[] (size_t idx)
+            inline virtual array<T, dim-1>& operator[] (size_t idx)
             {
                 if (idx >= sz_)
                     throw(array_exception(array_exception::OUT_OF_RANGE));
@@ -139,14 +144,14 @@ namespace framework
                 return container_[idx];
             }
 
-            inline array<T, dim-1>& at(size_t idx)
+            inline virtual array<T, dim-1>& at(size_t idx)
             {
                 return operator[](idx);
             }
 
-            inline bool push(const T e)
+            inline virtual bool push(const T e)
             {
-                if (tpos_ > sz_) 
+                if (tpos_ >= sz_) 
                     throw(array_exception(array_exception::OUT_OF_RANGE));
                 if (!container_)
                     throw(array_exception(array_exception::NOT_ALLOCATED));
@@ -162,7 +167,7 @@ namespace framework
                 return sz_;
             }
 
-            inline array<T, dim>& operator= (array<T, dim>& rhs)
+            inline virtual array<T, dim>& operator= (array<T, dim>& rhs)
             {
                 if (sz_ != rhs.sz_)
                     clear();
@@ -217,12 +222,17 @@ namespace framework
         public:
             array() : element_(NULL), sz_(0), tpos_(0) {}
 
+            array(array<T, 1>& other) : element_(NULL), sz_(0)
+            {
+                operator= (other);
+            }
+
             array(size_t s1)
             {
                 set_size(s1);
             }
 
-            ~array()
+            virtual ~array()
             {
                 clear();
             }
@@ -234,7 +244,7 @@ namespace framework
                 tpos_    = 0;
             }
 
-            inline void clear()
+            inline virtual void clear()
             {
                 if (!element_) return;
                 delete [] element_;
@@ -247,9 +257,9 @@ namespace framework
                 set_size(s1);
             }
 
-            inline T& operator[] (size_t idx)
+            inline virtual T& operator[] (size_t idx)
             {
-                if (idx > sz_)
+                if (idx >= sz_)
                     throw(array_exception(array_exception::OUT_OF_RANGE));
                 if (!element_)
                     throw(array_exception(array_exception::NOT_ALLOCATED));
@@ -261,9 +271,9 @@ namespace framework
                 return operator[](idx);
             }
 
-            inline bool push(const T e)
+            inline virtual bool push(const T e)
             {
-                if (tpos_ > sz_) 
+                if (tpos_ >= sz_) 
                     throw(array_exception(array_exception::OUT_OF_RANGE));
                 if (!element_)
                     throw(array_exception(array_exception::NOT_ALLOCATED));
@@ -320,8 +330,8 @@ namespace framework
 
     }; // class array<T, 1>
 
-
     // function templates
+    
     template <typename T, size_t dim>
     inline array<T, dim>& operator, (array<T, dim>& ar, const T rhs)
     {

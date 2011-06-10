@@ -12,11 +12,13 @@ using namespace framework;
 
 void test_logstream(void);
 void test_array(void);
+void test_buffer(void);
 
 int main(int argc, char* argv[], char* envp[])
 {
     //test_logstream();
-    test_array();
+    //test_array();
+    test_buffer();
 
     return 0;
 }
@@ -80,6 +82,33 @@ void test_array(void)
     array<int, 1> C;
     C.set_size(3);
     C = 1, 2, 3, 4;
-    cout << C << endl;
+
+    array<int, 1> D = C;
+    cout << D << endl;
 }
 
+void test_buffer(void)
+{
+    buffer<int> A;
+    
+    try {
+        A.push(10);
+    } catch (array_exception e) {
+        SHOW(e);
+    }
+
+    A.set_size(10);
+
+    for (int i = 0; i < 20; ++i) {
+        A.push(i);
+        cout << setw(2) << setfill('0') << A << endl;
+    }
+    for (int i = 0; i < 11; ++i) {
+        try {
+            int x = A.pop();
+            cout << setw(2) << setfill('0') << x << '\t' << A << endl;
+        } catch (array_exception e) {
+            SHOW(e);
+        }
+    }
+}
