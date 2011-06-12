@@ -162,9 +162,12 @@ namespace framework
                     return false;
             }
 
-            inline size_t size(void) const
+            inline size_t size(const size_t o = 0, const size_t d = dim) const
             {
-                return sz_;
+                if (dim == (d - o))
+                    return sz_;
+                else
+                    return container_[0].size(o, d);
             }
 
             inline virtual array<T, dim>& operator= (array<T, dim>& rhs)
@@ -284,7 +287,7 @@ namespace framework
                     return false;
             }
 
-            inline size_t size(void) const
+            inline size_t size(const size_t o = 0, const size_t d = 1) const
             {
                 return sz_;
             }

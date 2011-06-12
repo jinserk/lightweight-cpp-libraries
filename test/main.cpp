@@ -17,8 +17,8 @@ void test_buffer(void);
 int main(int argc, char* argv[], char* envp[])
 {
     //test_logstream();
-    //test_array();
-    test_buffer();
+    test_array();
+    //test_buffer();
 
     return 0;
 }
@@ -63,6 +63,8 @@ void test_array(void)
         SHOW(e);
     }
 
+    cout << A.size(0) << " " << A.size(1) << endl;
+
     B = A;
 
     A.resize(2, 4);
@@ -89,7 +91,7 @@ void test_array(void)
 
 void test_buffer(void)
 {
-    buffer<int> A;
+    buffer<float> A;
     
     try {
         A.push(10);
@@ -99,12 +101,12 @@ void test_buffer(void)
 
     A.set_size(10);
 
-    for (int i = 0; i < 20; ++i) {
+    for (float i = 0.; i < 20.; i += 1.1) {
         A.push(i);
-        cout << setw(2) << setfill('0') << A << endl;
+        cout << setw(4) << setfill('0') << fixed << setprecision(1) << A << endl;
     }
 
-    buffer<int> B = A;
+    buffer<float> B = A;
 
     for (int i = 0; i < 11; ++i) {
         try {
