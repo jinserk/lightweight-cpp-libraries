@@ -98,6 +98,15 @@ namespace framework
                 return *this;
             }
 
+            template <typename T2>
+            inline buffer<T>& operator= (buffer<T2>& rhs)
+            {
+                array<T, 1>::operator= ((array<T2, 1>&)rhs);
+                occupied_ = rhs.occupied_;
+                hpos_     = rhs.hpos_;
+                return *this;
+            }
+
     }; // class buffer<T>
 
     template <typename T>

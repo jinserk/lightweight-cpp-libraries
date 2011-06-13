@@ -306,6 +306,21 @@ namespace framework
                 return *this;
             }
 
+            template <typename T2>
+            inline array<T, 1>& operator= (array<T2, 1>& rhs)
+            {
+                if (sz_ != rhs.sz_)
+                    clear();
+                if (!element_) {
+                    sz_ = rhs.sz_;
+                    element_ = new T [sz_];
+                } 
+                tpos_ = rhs.tpos_;
+                for (size_t i = 0; i < sz_; i++)
+                    element_[i] = (T)rhs.element_[i];
+                return *this;
+            }
+
             inline array<T, 1>& operator= (const T rhs)
             {
                 reset_pos();
