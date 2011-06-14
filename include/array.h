@@ -149,7 +149,7 @@ namespace framework
                 return operator[](idx);
             }
 
-            inline virtual bool push(const T e)
+            inline bool push(const T e)
             {
                 if (tpos_ >= sz_) 
                     throw(array_exception(array_exception::OUT_OF_RANGE));
@@ -162,6 +162,12 @@ namespace framework
                     return false;
             }
 
+            template <typename T2>
+            inline bool push(const T2 e)
+            {
+                return push((const T)e);
+            }
+
             inline size_t size(const size_t o = 0, const size_t d = dim) const
             {
                 if (dim == (d - o))
@@ -170,7 +176,14 @@ namespace framework
                     return container_[0].size(o, d);
             }
 
-            inline virtual array<T, dim>& operator= (array<T, dim>& rhs)
+            inline void reset_pos(void)
+            {
+                tpos_ = 0;
+                for (size_t i = 0; i < sz_; i++)
+                    container_[i].reset_pos();
+            }
+
+            inline array<T, dim>& operator= (array<T, dim>& rhs)
             {
                 if (sz_ != rhs.sz_)
                     clear();
@@ -181,6 +194,21 @@ namespace framework
                 tpos_ = rhs.tpos_;
                 for (size_t i = 0; i < sz_; i++)
                     container_[i] = rhs.container_[i];
+                return *this;
+            }
+
+            template <typename T2>
+            inline array<T, dim>& operator= (array<T2, dim>& rhs)
+            {
+                if (sz_ != rhs.size())
+                    clear();
+                if (!container_) {
+                    sz_ = rhs.size();
+                    container_ = new array<T, dim-1> [sz_];
+                }
+                tpos_ = rhs.pos();
+                for (size_t i = 0; i < sz_; i++)
+                    container_[i] = rhs[i];
                 return *this;
             }
 
@@ -205,13 +233,6 @@ namespace framework
                 return *this;
             }
 
-            inline void reset_pos(void)
-            {
-                tpos_ = 0;
-                for (size_t i = 0; i < sz_; i++)
-                    container_[i].reset_pos();
-            }
-
     }; // class array<T, dim>
 
     template<typename T>
@@ -226,6 +247,12 @@ namespace framework
             array() : element_(NULL), sz_(0), tpos_(0) {}
 
             array(array<T, 1>& other) : element_(NULL), sz_(0)
+            {
+                operator= (other);
+            }
+
+            template <typename T2>
+            array(array<T2, 1>& other) : element_(NULL), sz_(0)
             {
                 operator= (other);
             }
@@ -309,15 +336,15 @@ namespace framework
             template <typename T2>
             inline array<T, 1>& operator= (array<T2, 1>& rhs)
             {
-                if (sz_ != rhs.sz_)
+                if (sz_ != rhs.size())
                     clear();
                 if (!element_) {
-                    sz_ = rhs.sz_;
+                    sz_ = rhs.size();
                     element_ = new T [sz_];
                 } 
-                tpos_ = rhs.tpos_;
+                tpos_ = rhs.pos();
                 for (size_t i = 0; i < sz_; i++)
-                    element_[i] = (T)rhs.element_[i];
+                    element_[i] = (T)rhs[i];
                 return *this;
             }
 

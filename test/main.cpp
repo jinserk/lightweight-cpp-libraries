@@ -18,7 +18,7 @@ int main(int argc, char* argv[], char* envp[])
 {
     //test_logstream();
     test_array();
-    //test_buffer();
+    test_buffer();
 
     return 0;
 }
@@ -83,7 +83,11 @@ void test_array(void)
 
     array<int, 1> C;
     C.set_size(3);
-    C = 1, 2, 3, 4;
+    try {
+        C = 1, 2, 3, 4;
+    } catch (array_exception e) {
+        SHOW(e);
+    }
 
     array<int, 1> D = C;
     cout << D << endl;
@@ -118,4 +122,13 @@ void test_buffer(void)
     }
 
     cout << B << endl;
+
+    try {
+        buffer<int> C;
+        C = B;
+
+        cout << C << endl;
+    } catch (array_exception e) {
+        SHOW(e);
+    }
 }

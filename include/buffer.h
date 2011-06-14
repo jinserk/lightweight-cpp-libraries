@@ -37,6 +37,14 @@ namespace framework
                 operator= (other);
             }
 
+            template <typename T2>
+            buffer(buffer<T2>& other)
+            {
+                element_ = NULL;
+                sz_      = 0;
+                operator= (other);
+            }
+
             inline virtual void clear()
             {
                 array<T, 1>::clear();
@@ -92,18 +100,34 @@ namespace framework
 
             inline buffer<T>& operator= (buffer<T>& rhs)
             {
-                array<T, 1>::operator= ((array<T, 1>&)rhs);
-                occupied_ = rhs.occupied_;
-                hpos_     = rhs.hpos_;
+                if (sz_ != rhs.sz_)
+                    clear();
+                if (!element_) {
+                    sz_ = rhs.sz_;
+                    element_ = new T [sz_];
+                } 
+                occupied_ = 0;
+                hpos_     = 0;
+                tpos_     = 0;
+                for (size_t i = 0, l = rhs.occupied_; i < l; i++)
+                    this->push(rhs[i]);
                 return *this;
             }
 
             template <typename T2>
             inline buffer<T>& operator= (buffer<T2>& rhs)
             {
-                array<T, 1>::operator= ((array<T2, 1>&)rhs);
-                occupied_ = rhs.occupied_;
-                hpos_     = rhs.hpos_;
+                if (sz_ != rhs.size())
+                    clear();
+                if (!element_) {
+                    sz_ = rhs.size();
+                    element_ = new T [sz_];
+                } 
+                occupied_ = 0;
+                hpos_     = 0;
+                tpos_     = 0;
+                for (size_t i = 0, l = rhs.occupied(); i < l; i++)
+                    this->push((T)rhs[i]);
                 return *this;
             }
 

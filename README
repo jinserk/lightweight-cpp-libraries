@@ -8,7 +8,8 @@ currently this library contains only logstream class, which supports
 for a output stream toward both cout and ofstream simultanously. 
 it also supports switching function to turn on and off either of them.
 
+Version 0.2
+multi-dimensional array and circular buffer class templates are added.
 
-
-This library is under LGPL license. Please read LICENSE file for detail
-information.
+This library is distributed under LGPL license. Please read LICENSE
+file for detailed information.
